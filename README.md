@@ -60,4 +60,4 @@ files = [
 ]
 ```
 
-Only files listed under `files` will be included when the package is installed.
+Only files listed under `files` in the manifest will be included when the package is installed.
