@@ -11,19 +11,22 @@ mod godot;
 #[derive(StructOpt, Debug)]
 #[structopt(version = "0.1", author = "Hagsteel", about = "Unofficial Godot tool")]
 enum Opts {
+    #[structopt(about = "Install one or more packages")]
     Install {
-        #[structopt(short, long)]
+        #[structopt(short, long, help = "file containing list of packages")]
         requirements: Option<PathBuf>,
 
-        #[structopt(name = "path")]
+        #[structopt(name = "path", help = "path to a single package")]
         path: Option<String>,
     },
+    #[structopt(about = "Verify a manifest file")]
     Verify {
-        #[structopt(short, long)]
+        #[structopt(short, long, help = "path to manifest file")]
         manifest: PathBuf,
     },
+    #[structopt(about = "Init a Godot project")]
     Init {
-        #[structopt(name = "project name")]
+        #[structopt(name = "project name", help = "godot project name")]
         name: String,
     }
 }
