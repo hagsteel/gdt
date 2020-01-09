@@ -19,6 +19,9 @@ remote location (e.g github.com)
 
 ## Installing a package
 
+Packages are installed in a `pack` directory in the current working directory.
+
+
 ```
 $ gut install path/to/package
 ```

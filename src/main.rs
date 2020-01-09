@@ -9,7 +9,7 @@ mod godot;
 
 
 #[derive(StructOpt, Debug)]
-#[structopt(version = "0.1", author = "Hagsteel", about = "Unofficial Godot tool")]
+#[structopt(version = "0.1", author = "Hagsteel", about = "Unofficial Godot tool\nNote!!! always read manifest files before installing")]
 enum Opts {
     #[structopt(about = "Install one or more packages")]
     Install {
