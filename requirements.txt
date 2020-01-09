@@ -1,2 +1,0 @@
-/home/jonas/projects/godot/godot-packages/basic-transition
-# godot-packages/dummy
