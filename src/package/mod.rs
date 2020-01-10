@@ -109,5 +109,5 @@ fn to_github_raw(path: &str) -> String {
     if parts.len() != 2 {
         eprintln!("{:?}", "invalid path");
     }
-    format!("https://raw.githubusercontent.com/hagsteel/{}/master/{}/", parts[0], parts[1])
+    format!("https://raw.githubusercontent.com/{}/godot-packages/master/{}/", parts[0], parts[1])
 }
