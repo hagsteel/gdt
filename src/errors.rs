@@ -7,6 +7,7 @@ pub enum Error {
     Io(io::Error),
     Toml(toml::de::Error),
     Reqwest(reqwest::Error),
+    Failure(failure::Error),
     FileNotFound(String),
     InvalidResponse,
 }
@@ -26,5 +27,11 @@ impl From<toml::de::Error> for Error {
 impl From<reqwest::Error> for Error {
     fn from(err: reqwest::Error) -> Self {
         Self::Reqwest(err)
+    }
+}
+
+impl From<failure::Error> for Error {
+    fn from(err: failure::Error) -> Self {
+        Self::Failure(err)
     }
 }
