@@ -1,4 +1,4 @@
-# Godot unofficial tool
+# Godot Unofficial Tool
 
 *Note: this is very much a work in progress and is subject to change*
 
