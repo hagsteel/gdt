@@ -9,6 +9,8 @@ $ gut init <project name>
 ```
 
 creates a Godot project (really just adds one file right now).
+Alternatively running `git init -r <project name>` will create a Godot project
+and set it up as a Rust crate.
 
 
 # Package manager
