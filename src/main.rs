@@ -28,9 +28,6 @@ enum Opts {
     Init {
         #[structopt(name = "project name", help = "godot project name")]
         name: String,
-
-        #[structopt(short, long, help = "add Rust project")]
-        rust: bool,
     }
 }
 
@@ -41,17 +38,6 @@ fn main() {
     match opt {
         Opts::Install { requirements, path } => package::install_packages(requirements, path, false),
         Opts::Verify { manifest } => package::verify(manifest),
-        Opts::Init { name, rust } => godot::init(name, rust),
+        Opts::Init { name } => godot::init(name),
     }
 }
-
-// #[tokio::main]
-// async fn main() -> Result<(), Box<dyn std::error::Error>> {
-//     let resp = reqwest::get("https://httpbin.org/ip")
-//         .await?
-//         .text()
-//         .await?;
-//     println!("{:#?}", resp);
-//     Ok(())
-// }
-
