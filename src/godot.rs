@@ -1,5 +1,6 @@
 use std::io::Write;
-use std::fs::{File, create_dir_all};
+use std::fs::{File, create_dir_all, set_permissions, metadata};
+use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 
 use crate::errors::Result;
@@ -37,8 +38,9 @@ pub fn init(name: String) {
     let godot_project_file_path = PathBuf::from(&name).join("godot");
     let rust_project_file_path = PathBuf::from(&name).join("rust");
 
-    // Create directory
+    // Create directories
     let _ = create_dir_all(&godot_project_file_path);
+    let _ = create_dir_all(&godot_project_file_path.join("lib"));
     let _ = create_dir_all(&rust_project_file_path);
 
     // Create project template
@@ -119,10 +121,52 @@ fn cargo_init(name: String) -> Result<()> {
     lines.push("crate-type = [\"dylib\"]");
     lines.push("");
     lines.push("[dependencies]");
+    lines.push("gdnative = { path = \"../../godot-rust/gdnative\" }");
+    lines.push("gdextras = { path = \"../../gdextras\"} ");
 
     let cargo_toml = lines.join("\n");
     let mut cargo_file = File::create(cargo_path)?;
     cargo_file.write_all(cargo_toml.as_bytes())?;
+
+    let build_file_path = full_path.join("build.sh");
+    create_build_script(&name, build_file_path.into());
+
+    let watch_file_path = full_path.join("watch.sh");
+    create_watch_script(&name, watch_file_path.into());
+
+    Ok(())
+}
+
+fn create_build_script(project_name: &str, path: PathBuf) -> Result<()> {
+    let file_content = format!(r#"#!/bin/sh
+clear
+if cargo build --release; then
+    mv target/release/lib{name}.so ../godot/lib/lib{name}.so
+    mplayer ~/Documents/ok.wav 1>&- 2>&-
+else
+    mplayer ~/Documents/err.wav 1>&- 2>&-
+    exit 1
+fi
+"#, name=project_name);
+
+    let mut build_file = File::create(&path)?;
+    build_file.write_all(file_content.as_bytes())?;
+    let mut perms = metadata(&path)?.permissions();
+    perms.set_mode(0o777);
+    set_permissions(path, perms);
+
+    Ok(())
+}
+
+fn create_watch_script(project_name: &str, path: PathBuf) -> Result<()> {
+    let file_content = r#"#!/bin/sh
+cargo watch -s './build.sh' -w src/ -w ../../gdextras/ "#;
+
+    let mut watch_file = File::create(&path)?;
+    watch_file.write_all(file_content.as_bytes())?;
+    let mut perms = metadata(&path)?.permissions();
+    perms.set_mode(0o777);
+    set_permissions(path, perms);
 
     Ok(())
 }
