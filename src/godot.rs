@@ -142,9 +142,11 @@ fn create_build_script(project_name: &str, path: PathBuf) -> Result<()> {
 clear
 if cargo build --release; then
     mv target/release/lib{name}.so ../godot/lib/lib{name}.so
+    tmux renamew -t $TWINDOW Ok
     mplayer ~/Documents/ok.wav 1>&- 2>&-
 else
     mplayer ~/Documents/err.wav 1>&- 2>&-
+    tmux renamew -t $TWINDOW Err...
     exit 1
 fi
 "#, name=project_name);
