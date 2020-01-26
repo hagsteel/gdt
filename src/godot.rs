@@ -167,6 +167,7 @@ fi
 
 fn create_watch_script(project_name: &str, path: PathBuf) -> Result<()> {
     let file_content = r#"#!/bin/sh
+export TWINDOW="$(tmux display-message -p '#I')"
 cargo watch -s './build.sh' -w src/ -w ../../gdextras/ "#;
 
     let mut watch_file = File::create(&path)?;
