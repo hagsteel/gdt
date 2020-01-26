@@ -180,7 +180,7 @@ cargo watch -s './build.sh' -w src/ -w ../../gdextras/ "#;
 }
 
 fn create_native_lib_file(project_name: &str, path: PathBuf) -> Result<()> {
-    let file_content = r#"[entry]
+    let file_content = format!(r#"[entry]
 
 X11.64="res://lib/lib{name}.so"
 
@@ -193,7 +193,7 @@ X11.64=[  ]
 singleton=false
 load_once=true
 symbol_prefix="godot_"
-reloadable=true"#;
+reloadable=true"#, name=project_name);
 
     let mut gdnlib_file = File::create(&path)?;
     gdnlib_file.write_all(file_content.as_bytes())?;
