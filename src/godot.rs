@@ -55,9 +55,13 @@ pub fn init(name: String) {
     eprintln!("Created requirements file");
 
     // Cargo init
-    let res = cargo_init(name);
-    if let Err(e) = res {
+    if let Err(e) = cargo_init(&name) {
         eprintln!("Failed to init Rust project: {:?}", e);
+    }
+
+    // Create gdnlib file
+    if let Err(e) = create_native_lib_file(&name, godot_project_file_path.join(format!("lib{}.gdnlib", name))) {
+        eprintln!("Failed to create gdnlib file: {:?}", e);
     }
 }
 
@@ -75,7 +79,7 @@ fn create_file(path: PathBuf, content: &str) {
 // -----------------------------------------------------------------------------
 //     - Rust's cargo init -
 // -----------------------------------------------------------------------------
-fn cargo_init(name: String) -> Result<()> {
+fn cargo_init(name: &str) -> Result<()> {
     use std::env::current_dir;
     use std::fs::read_to_string;
     use cargo::ops;
@@ -140,6 +144,7 @@ fn cargo_init(name: String) -> Result<()> {
 fn create_build_script(project_name: &str, path: PathBuf) -> Result<()> {
     let file_content = format!(r#"#!/bin/sh
 clear
+tmux renamew -t $TWINDOW building...
 if cargo build --release; then
     mv target/release/lib{name}.so ../godot/lib/lib{name}.so
     tmux renamew -t $TWINDOW Ok
@@ -169,6 +174,28 @@ cargo watch -s './build.sh' -w src/ -w ../../gdextras/ "#;
     let mut perms = metadata(&path)?.permissions();
     perms.set_mode(0o777);
     set_permissions(path, perms);
+
+    Ok(())
+}
+
+fn create_native_lib_file(project_name: &str, path: PathBuf) -> Result<()> {
+    let file_content = r#"[entry]
+
+X11.64="res://lib/lib{name}.so"
+
+[dependencies]
+
+X11.64=[  ]
+
+[general]
+
+singleton=false
+load_once=true
+symbol_prefix="godot_"
+reloadable=true"#;
+
+    let mut gdnlib_file = File::create(&path)?;
+    gdnlib_file.write_all(file_content.as_bytes())?;
 
     Ok(())
 }
