@@ -143,15 +143,15 @@ fn cargo_init(name: &str) -> Result<()> {
 
 fn create_build_script(project_name: &str, path: PathBuf) -> Result<()> {
     let file_content = format!(r#"#!/bin/sh
-clear
 tmux renamew -t $TWINDOW building...
+clear
 if cargo build --release; then
     mv target/release/lib{name}.so ../godot/lib/lib{name}.so
     tmux renamew -t $TWINDOW Ok
     mplayer ~/Documents/ok.wav 1>&- 2>&-
 else
-    mplayer ~/Documents/err.wav 1>&- 2>&-
     tmux renamew -t $TWINDOW Err...
+    mplayer ~/Documents/err.wav 1>&- 2>&-
     exit 1
 fi
 "#, name=project_name);
