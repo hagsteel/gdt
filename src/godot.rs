@@ -1,5 +1,5 @@
 use std::io::Write;
-use std::fs::{File, create_dir_all, set_permissions, metadata};
+use std::fs::{File, create_dir_all, set_permissions, metadata, remove_file, rename};
 use std::os::unix::fs::PermissionsExt;
 use std::path::PathBuf;
 
@@ -35,8 +35,9 @@ const REQUIREMENTS_FILE: &'static str = "requirements.txt";
 const REQUIREMENTS: &'static str = "hagsteel/simple-sprite";
 
 pub fn init(name: String) {
-    let godot_project_file_path = PathBuf::from(&name).join("godot");
-    let rust_project_file_path = PathBuf::from(&name).join("rust");
+    let project_root = PathBuf::from(&name);
+    let godot_project_file_path = project_root.join("godot");
+    let rust_project_file_path = project_root.join("rust");
 
     // Create directories
     let _ = create_dir_all(&godot_project_file_path);
@@ -54,9 +55,16 @@ pub fn init(name: String) {
     create_file(requirements_file, REQUIREMENTS);
     eprintln!("Created requirements file");
 
-    // Cargo init
-    if let Err(e) = cargo_init(&name) {
-        eprintln!("Failed to init Rust project: {:?}", e);
+    // Cargo init (and move .git dir)
+    match cargo_init(&name) {
+        Ok(_) => { 
+            let _ = rename(&rust_project_file_path.join(".git"), project_root.join(".git")); 
+            let _ = remove_file(&rust_project_file_path.join(".gitignore")); 
+            let _ = create_git_ignore(project_root.join(".gitignore"));
+        }
+        Err(e) => {
+            eprintln!("Failed to init Rust project: {:?}", e);
+        }
     }
 
     // Create gdnlib file
@@ -197,6 +205,17 @@ reloadable=true"#, name=project_name);
 
     let mut gdnlib_file = File::create(&path)?;
     gdnlib_file.write_all(file_content.as_bytes())?;
+
+    Ok(())
+}
+
+fn create_git_ignore(path: PathBuf) -> Result<()> {
+    let file_content = r#"/rust/target
+**/*.rs.bk
+Cargo.lock"#;
+
+    let mut git_ignore_file = File::create(&path)?;
+    git_ignore_file.write_all(file_content.as_bytes())?;
 
     Ok(())
 }
