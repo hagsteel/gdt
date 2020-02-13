@@ -156,9 +156,11 @@ clear
 if cargo build --release; then
     mv target/release/lib{name}.so ../godot/lib/lib{name}.so
     tmux renamew -t $TWINDOW Ok
+    buildstreak success
     mplayer ~/Documents/ok.wav 1>&- 2>&-
 else
     tmux renamew -t $TWINDOW Err...
+    buildstreak fail
     mplayer ~/Documents/err.wav 1>&- 2>&-
     exit 1
 fi
