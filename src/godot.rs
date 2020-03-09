@@ -71,6 +71,11 @@ pub fn init(name: String) {
     if let Err(e) = create_native_lib_file(&name, godot_project_file_path.join(format!("lib{}.gdnlib", name))) {
         eprintln!("Failed to create gdnlib file: {:?}", e);
     }
+
+    // Create default env file
+    if let Err(e) = create_env_file(godot_project_file_path.join("default_env.tres")) {
+        eprintln!("Failed to create gdnlib file: {:?}", e);
+    }
 }
 
 fn create_file(path: PathBuf, content: &str) {
@@ -220,6 +225,19 @@ Cargo.lock"#;
 
     let mut git_ignore_file = File::create(&path)?;
     git_ignore_file.write_all(file_content.as_bytes())?;
+
+    Ok(())
+}
+
+fn create_env_file(path: PathBuf) -> Result<()> {
+    let file_content = r#"[gd_resource type="Environment" load_steps=2 format=2]
+[sub_resource type="ProceduralSky" id=1]
+[resource]
+background_mode = 2
+background_sky = SubResource( 1 )"#;
+
+    let mut env_file = File::create(&path)?;
+    env_file.write_all(file_content.as_bytes())?;
 
     Ok(())
 }
