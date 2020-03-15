@@ -159,7 +159,7 @@ fn create_build_script(project_name: &str, path: PathBuf) -> Result<()> {
 tmux renamew -t $TWINDOW building...
 clear
 if cargo build --release; then
-    mv target/release/lib{name}.so ../godot/lib/lib{name}.so
+    cp target/release/lib{name}.so ../godot/lib/lib{name}.so
     tmux renamew -t $TWINDOW Ok
     buildstreak success
     buildstreak tmux > /tmp/buildstreak
