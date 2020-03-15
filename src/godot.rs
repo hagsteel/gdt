@@ -138,7 +138,7 @@ fn cargo_init(name: &str) -> Result<()> {
     lines.push("crate-type = [\"dylib\"]");
     lines.push("");
     lines.push("[dependencies]");
-    lines.push("gdnative = { path = \"../../godot-rust/gdnative\" }");
+    lines.push("gdnative = \"0.8.0\" }");
     lines.push("gdextras = { path = \"../../gdextras\"} ");
 
     let cargo_toml = lines.join("\n");
