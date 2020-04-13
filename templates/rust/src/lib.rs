@@ -2,7 +2,7 @@ use gdnative::*;
 
 
 fn init(handle: init::InitHandle) {
-    handle.add_class::<>();
+    // handle.add_class::<>();
 }
 
 godot_gdnative_init!();
