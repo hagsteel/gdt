@@ -3,6 +3,8 @@
 *Note: this is very much a work in progress and is subject to change*
 
 A very basic "package" manager and project starter
+(This is more of a project starter right now and it's heavily dependant on my
+environment)
 
 ```
 $ gut init <project name>
