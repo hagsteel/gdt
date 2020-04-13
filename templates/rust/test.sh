@@ -6,5 +6,7 @@ if ! [ -x "$(command -v godot-headless)" ]; then
     exit 1
 fi
 
-./build.sh
-cd ../test && godot-headless 
+if cargo build --release; then
+    cp target/release/lib{{name}}.so ../test/lib/lib{{name}}.so
+    cd ../test && godot-headless 
+fi
