@@ -8,5 +8,10 @@ fi
 
 if cargo build --release; then
     cp target/release/lib{{name}}.so ../test/lib/lib{{name}}.so
-    cd ../test && godot-headless 
+    if cd ../test && godot-headless; then
+        echo "Tests passed"
+        exit 1
+    else
+        echo "Tests failed"
+    fi
 fi
