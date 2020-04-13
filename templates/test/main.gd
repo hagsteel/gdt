@@ -3,7 +3,6 @@ extends Node
 var gdn
 
 func _ready():
-    print('(GD) Testing...')
     gdn = GDNative.new()
     var status = false
 
