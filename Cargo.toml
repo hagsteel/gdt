@@ -1,5 +1,5 @@
 [package]
-name = "gut"
+name = "gdt"
 version = "0.1.0"
 authors = ["Jonas Hagstedt <hagstedt@gmail.com>"]
 edition = "2018"
