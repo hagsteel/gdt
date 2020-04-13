@@ -12,7 +12,7 @@ godot_gdnative_terminate!();
 
 #[no_mangle]
 pub extern fn run_tests() -> sys::godot_variant {
-    let status = false;
+    let mut status = true;
 
     eprintln!("Running tests: [add your tests here]");
 
