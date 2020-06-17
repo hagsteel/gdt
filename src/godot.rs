@@ -170,9 +170,15 @@ fn cargo_init(name: &str) -> Result<()> {
     lines.push("[lib]");
     lines.push("crate-type = [\"dylib\"]");
     lines.push("");
+    lines.push("[features]");
+    lines.push("godot_test = []");
+    lines.push("");
     lines.push("[dependencies]");
-    lines.push("gdnative = \"0.8.0\"");
-    lines.push("gdextras = { path = \"../../gdextras\"} ");
+    lines.push("gdnative = \"0.8.1\"");
+    lines.push("gdextras = { path = \"../../gdextras\" } ");
+    lines.push("legion = { git = \"https://github.com/tomgillen/legion\" } ");
+    lines.push("lazy_static = \"1.4.0\"");
+    lines.push("bitflags = \"1.2.1\"");
 
     let cargo_toml = lines.join("\n");
     let mut cargo_file = File::create(cargo_path)?;

@@ -10,11 +10,12 @@ func _ready():
 
     if gdn.initialize():
         status = gdn.call_native("standard_varcall", "run_tests", [])
-
-        if status:
-            print('all tests passed')
-        else:
-            print('test failure')
-
         gdn.terminate()
-        get_tree().quit(1)
+
+    if status:
+        print('all tests passed')
+    else:
+        OS.exit_code = 1
+        print('test failure')
+
+    get_tree().quit()
